@@ -1,4 +1,13 @@
 <script setup lang="ts">
+import { ref, watch } from "vue";
+import q from "./data/quizes.json"
+import Card from "./components/Card.vue";
+
+const quizes = ref(q)
+const search = ref("")
+watch(search, () => {
+  quizes.value = q.filter(quiz => quiz.name.toLowerCase().includes(search.value))
+})
 
 </script>
 
@@ -8,19 +17,11 @@
       <h1>
         QUIZES
       </h1>
-      <input type="text" placeholder="Type here to search your Quiz" />
+      <input v-model.trim="search" type="text" placeholder="Type here to search your Quiz" />
     </header>
 
     <div class="options-container">
-
-      <div class="card">
-        <img src="./assets/img/math.jpg" alt="">
-        <div class="card-text">
-          <h2>Math</h2>
-          <p>15 Questions </p>
-        </div>
-      </div>
-
+      <Card v-for="quiz in quizes" :key="quiz.id" :quiz="quiz" />
     </div>
   </div>
 </template>
@@ -60,27 +61,5 @@ header input {
   max-width: 100%;
   padding: 1rem;
   flex-wrap: wrap;
-}
-
-.card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  border-radius: 8px;
-  padding: 4px 8px;
-  margin: 4px 8px;
-  border: 1px solid black;
-  cursor: pointer;
-}
-
-.card:hover {
-  transform: scale(1.01);
-  opacity: 0.6;
-}
-
-.card img {
-  width: 300px;
-  height: 300px;
 }
 </style>
